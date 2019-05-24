@@ -246,12 +246,16 @@ class Cmd:
         return []
 
     def completenames(self, text, *ignored):
+        """ Method returns all commands.
+
+        If hide_undoc is True, only the commands with "help_" are returned.
+        """
         dotext = 'do_'+text
         names = self.get_names()
+        commands = [a[3:] for a in names if a.startswith(dotext)]
         if self.hide_undoc:
-            return [a[3:] for a in names if a.startswith(dotext)
-                    and 'help_'+a[3:] in names]
-        return [a[3:] for a in names if a.startswith(dotext)]
+            commands = [a for a in commands if 'help_' + a in names]
+        return commands
 
     def complete(self, text, state):
         """Return the next possible completion for 'text'.
